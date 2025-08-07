@@ -1,0 +1,4 @@
+fullnameOverride: opensearch-curator
+nameOverride: opensearch-curator
+
+command: ["/usr/local/bin/curator"]

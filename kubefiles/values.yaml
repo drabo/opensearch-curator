@@ -1,0 +1,93 @@
+# Default values for opensearch-curator.
+---
+cronjob:
+  # At 00:01 every day
+  schedule: "1 0 * * *"
+  annotations: {}
+  labels: {}
+  concurrencyPolicy: ""
+  failedJobsHistoryLimit: ""
+  successfulJobsHistoryLimit: ""
+  jobRestartPolicy: Never
+
+pod:
+  annotations: {}
+  labels: {}
+
+image:
+  repository: drabo/opensearch-curator
+  tag: 0.0.13
+  pullPolicy: IfNotPresent
+
+hooks:
+  install: false
+  upgrade: false
+
+dryrun: false # run in dry-run mode
+
+command: ["/usr/local/bin/curator"]
+env: {}
+
+configMaps:
+  action_file_yml: |-
+    ---
+    actions:
+      1:
+        action: delete_indices
+        description: "Delete old indices"
+        options:
+          timeout_override:
+          continue_if_exception: False
+          disable_action: False
+          ignore_empty_list: True
+        filters:
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 30
+  config_yml: |-
+    ---
+    client:
+      hosts:
+        - OPENSEARCH-CLUSTER-NAME
+      port: 9200
+      # url_prefix:
+      # use_ssl: True
+      # certificate:
+      # client_cert:
+      # client_key:
+      # ssl_no_validate: True
+      # http_auth:
+      # timeout: 30
+      # master_only: False
+    # logging:
+    #   loglevel: INFO
+    #   logfile:
+    #   logformat: default
+    #   blacklist: ['elasticsearch', 'urllib3']
+
+# Specify resource defaults and limits if necessary
+resources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+# extraVolumes and extraVolumeMounts
+# Use for: mounting certificates
+# extraVolumes:
+#   - name: oss-certs
+#     secret:
+#       defaultMode: 420
+#       secretName: oss-certs
+# extraVolumeMounts:
+#   - name: oss-certs
+#     mountPath: /certs
+#     readOnly: true
+
+securityContext:
+  runAsUser: 16  # run as cron user instead of root

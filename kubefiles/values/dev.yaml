@@ -1,0 +1,34 @@
+image:
+  repository: XXXXXXXXXXXXX.dkr.ecr.eu-central-1.amazonaws.com/opensearch-curator
+
+cronjob:
+  # At 03:00 every day
+  schedule: "0 3 * * *"
+
+configMaps:
+  action_file_yml: |-
+    ---
+    actions:
+      1:
+        action: delete_indices
+        description: "Delete old indices"
+        options:
+          timeout_override:
+          continue_if_exception: False
+          disable_action: False
+          ignore_empty_list: True
+        filters:
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 30
+  config_yml: |-
+    ---
+    client:
+      hosts:
+        - vpc-dev-opensearch-YYYYYYYYYYYYYYYYYY.eu-central-1.es.amazonaws.com
+      port: 443
+      use_ssl: True
+      timeout: 30

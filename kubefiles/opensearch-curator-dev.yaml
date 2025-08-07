@@ -1,0 +1,80 @@
+---
+# Source: opensearch-curator/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-curator-config
+  labels:
+    app: opensearch-curator
+    release: opensearch-curator
+data:
+  action_file.yml:   |-
+    ---
+    actions:
+      1:
+        action: delete_indices
+        description: "Delete old indices"
+        options:
+          timeout_override:
+          continue_if_exception: False
+          disable_action: False
+          ignore_empty_list: True
+        filters:
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 30
+  config.yml:   |-
+    ---
+    client:
+      hosts:
+        - vpc-dev-opensearch-YYYYYYYYYYYYYYYYYY.eu-central-1.es.amazonaws.com
+      port: 443
+      use_ssl: True
+      timeout: 30
+---
+# Source: opensearch-curator/templates/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: opensearch-curator
+  labels:
+    app: opensearch-curator
+    release: opensearch-curator
+spec:
+  schedule: "0 3 * * *"
+  jobTemplate:
+    metadata:
+      labels:
+        app: opensearch-curator
+        release: opensearch-curator
+    spec:
+      template:
+        metadata:
+          labels:
+            app: opensearch-curator
+            release: opensearch-curator
+        spec:
+          volumes:
+            - name: config-volume
+              configMap:
+                name: opensearch-curator-config
+          restartPolicy: Never
+          containers:
+            - name: opensearch-curator
+              image: "XXXXXXXXXXXXX.dkr.ecr.eu-central-1.amazonaws.com/opensearch-curator:0.0.13"
+              imagePullPolicy: IfNotPresent
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /etc/oss-curator
+
+              command:
+                - /usr/local/bin/curator
+              args: [ "--config", "/etc/oss-curator/config.yml", "/etc/oss-curator/action_file.yml" ]
+              env:
+              resources:
+                {}
+          securityContext:
+            runAsUser: 16
