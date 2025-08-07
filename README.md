@@ -1,6 +1,8 @@
 # Opensearch Curator
 
-<a href="https://pypi.org/project/curator-opensearch/" target="_blank" rel="noopener noreferrer">Opensearch Curator</a> is able to manage some elements in your Opensearch cluster. In the example is used a `delete_indices` action that will purge the indices older than a specified number.
+Opensearch Curator is able to manage some elements in your Opensearch cluster. In the example is used a `delete_indices` action that will purge the indices older than a specified number.
+
+See <https://pypi.org/project/curator-opensearch/>
 
 ## Build your own image
 
