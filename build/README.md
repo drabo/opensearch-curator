@@ -5,8 +5,8 @@
 Customize:
 
 - `config.rc` - versions
-  - base image: **PY_VER** - Debian slim image with Python - <https://hub.docker.com/_/python>
-  - opensearch-curator: **CURATOR_VER** - Curator Python module - <https://pypi.org/project/curator-opensearch/>
+  - base image: **PY_VER** - <a href="https://hub.docker.com/_/python" target="_blank" rel="noopener noreferrer">Debian slim image with Python</a>
+  - opensearch-curator: **CURATOR_VER** - <a href="https://pypi.org/project/curator-opensearch/" target="_blank" rel="noopener noreferrer">Curator Python module</a>
 
 - `build-and-push.sh` - build image and push it to your own repository
   - repo name: **REPO** - set your own repository

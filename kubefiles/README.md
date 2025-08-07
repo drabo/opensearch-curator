@@ -1,6 +1,6 @@
 # Opensearch Curator Helm Chart
 
-This directory contains a Kubernetes chart to deploy the [Opensearch Curator](https://pypi.org/project/curator-opensearch/).
+This directory contains a Kubernetes chart to deploy the <a href="https://pypi.org/project/curator-opensearch/" target="_blank" rel="noopener noreferrer">Opensearch Curator</a>
 
 ## Prerequisites
 
